@@ -1,0 +1,14 @@
+C:\Users\Administrator\source\repos\MyFirstTree\MyFirstTree\bin\Debug\MyFirstTree.exe.config
+C:\Users\Administrator\source\repos\MyFirstTree\MyFirstTree\bin\Debug\MyFirstTree.exe
+C:\Users\Administrator\source\repos\MyFirstTree\MyFirstTree\bin\Debug\MyFirstTree.pdb
+C:\Users\Administrator\source\repos\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\source\repos\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\source\repos\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.exe
+C:\Users\Administrator\source\repos\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.pdb
+E:\BaiduNetdiskDownload\MyFirstTree\MyFirstTree\MyFirstTree\bin\Debug\MyFirstTree.exe.config
+E:\BaiduNetdiskDownload\MyFirstTree\MyFirstTree\MyFirstTree\bin\Debug\MyFirstTree.exe
+E:\BaiduNetdiskDownload\MyFirstTree\MyFirstTree\MyFirstTree\bin\Debug\MyFirstTree.pdb
+E:\BaiduNetdiskDownload\MyFirstTree\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.csprojResolveAssemblyReference.cache
+E:\BaiduNetdiskDownload\MyFirstTree\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.csproj.CoreCompileInputs.cache
+E:\BaiduNetdiskDownload\MyFirstTree\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.exe
+E:\BaiduNetdiskDownload\MyFirstTree\MyFirstTree\MyFirstTree\obj\Debug\MyFirstTree.pdb
