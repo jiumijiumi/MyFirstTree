@@ -17,6 +17,7 @@ namespace MyFirstTree
         public Tree Parent;
         public Dictionary<char, Tree> Original;
         public char ThisKey;
+        public char FirstAlphabet;
 
         public Tree()
         {
@@ -29,7 +30,7 @@ namespace MyFirstTree
         /// </summary>
         /// <param name="key"></param>
         /// <param name="word"></param>
-        public void PlantATree(char key, string word)//递归递归//这不是二叉树不是二叉树
+        public void PlantATree(char key, string word)//递归递归
         {
             if (IsNullOrEmpty(word))
             {
