@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MyFirstTree
 {
@@ -20,26 +21,24 @@ namespace MyFirstTree
             int p = i;//p表示左边与划分元素相等的地址
             int q = j;//q表示右边与划分元素相等的地址
             int k; //用作中间元素,提前声明而已
-            char leftchar = GetFirstAlphabet.GetCharSpellCode(wordList[left].First().ToString());
-            char rightchar = GetFirstAlphabet.GetCharSpellCode(wordList[right - 1].First().ToString());
-            char mediumchar = GetFirstAlphabet.GetCharSpellCode(wordList[(left + right) / 2].First().ToString());
-            char vItem = (char) ((leftchar + rightchar + mediumchar) / 3);//划分元素
+            string mediumstring = GetFirstLetterOfPinYin(wordList[(left + right) / 2]);
+            string vItem = mediumstring;//划分元素
             
             while (true)
             {
-                while (GetFirstAlphabet.GetCharSpellCode(wordList[i].First().ToString()) < vItem) i++;
-                while (GetFirstAlphabet.GetCharSpellCode(wordList[j].First().ToString()) > vItem) j--;
+                while (string.CompareOrdinal(GetFirstLetterOfPinYin(wordList[i]),vItem)<0) i++;
+                while (string.CompareOrdinal(GetFirstLetterOfPinYin(wordList[j]), vItem)>0) j--;
                 if (!(i < j)) break;
                 ExchangeTwoItems(ref wordList,i,j);
 
-                if (!(GetFirstAlphabet.GetCharSpellCode(wordList[i].First().ToString()) < vItem) &&
-                    !(GetFirstAlphabet.GetCharSpellCode(wordList[i].First().ToString()) > vItem))
+                if (!(string.CompareOrdinal(GetFirstLetterOfPinYin(wordList[i]), vItem) < 0) &&
+                    !(string.CompareOrdinal(GetFirstLetterOfPinYin(wordList[i]), vItem) > 0))
                 {
                     ExchangeTwoItems(ref wordList,i,p);
                     p++;
                 }
-                if (!(GetFirstAlphabet.GetCharSpellCode(wordList[j].First().ToString()) < vItem) &&
-                    !(GetFirstAlphabet.GetCharSpellCode(wordList[j].First().ToString()) > vItem))
+                if (!(string.CompareOrdinal(GetFirstLetterOfPinYin(wordList[j]), vItem) < 0) &&
+                    !(string.CompareOrdinal(GetFirstLetterOfPinYin(wordList[j]), vItem) > 0))
                 {
                     ExchangeTwoItems(ref wordList,j,q);
                     q--;
@@ -59,6 +58,18 @@ namespace MyFirstTree
             QuickSort(ref wordList, left, j+1);
             QuickSort(ref wordList,i,right);
         }
+
+        public static string GetFirstLetterOfPinYin(string chineseString)
+        {
+            StringBuilder sb=new StringBuilder();
+            foreach (var letter in chineseString)
+            {
+              var englishLetter=  ProfessionGf.GetFirstPinYin(letter.ToString());
+                sb.Append(englishLetter);
+            }
+            return sb.ToString();
+        }
+
         public static void ExchangeTwoItems(ref List<string>wordListToChange, int indexOfWordA,int indexOfWordB)
         {
             string temp=wordListToChange[indexOfWordA];
