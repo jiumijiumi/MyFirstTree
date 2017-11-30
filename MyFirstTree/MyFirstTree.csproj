@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AC.cs" />
     <Compile Include="KMP.cs" />
     <Compile Include="ProfessionGF.cs" />
     <Compile Include="Program.cs" />
