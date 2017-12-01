@@ -13,3 +13,4 @@
 ﻿# 三路划分算法的理解：http://www.cppblog.com/qinqing1984/archive/2015/09/12/175379.html
 
 ﻿# Good luck! :)
+﻿# 没有什么是一蹴而就的，慢慢写吧，切不可急功近利！
