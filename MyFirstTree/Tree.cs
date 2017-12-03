@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography.X509Certificates;
@@ -12,7 +13,7 @@ using static System.String;
 
 namespace MyFirstTree
 {
-    public class Tree 
+    public class Tree
     {
         public bool IsEnd;
         public Tree Parent;
@@ -20,10 +21,11 @@ namespace MyFirstTree
         public char ThisKey;
         public Tree fail;
         public StringBuilder sb;
+        // private Tree root;
         public Tree()
         {
             Original = new Dictionary<char, Tree>();
-            sb=new StringBuilder();
+            sb = new StringBuilder();
         }
         /// <summary>
         /// 形成一棵树
@@ -68,69 +70,52 @@ namespace MyFirstTree
             }
         }
 
-        public void BuildAC(ref Tree tree)
+        /// <summary>
+        /// 构建失败指针(BFS广度优先搜索)
+        /// </summary>
+        /// <param name="root"></param>
+        public void BuildFailNodeBfs(ref Tree root)
         {
-            Tree root = new Tree {Original = new Dictionary<char, Tree> {{'r', tree}}};
-            Queue<Tree>queue=new Queue<Tree>();
-            //将根结点的所有孩子结点的fail指向根结点，然后将根结点的所有孩子结点依次入列。
-            foreach (char key in tree.sb.ToString())
+            Queue<Tree> queue = new Queue<Tree>();
+
+            //根节点入队
+            queue.Enqueue(root);
+            while (queue.Count != 0)
             {
-                tree.Original[key].fail = root;
-                queue.Enqueue(tree.Original[key]);
-            }
-            while (queue.Count > 0)
-            {
-                Tree nodeTree = queue.Dequeue();
-                for (int i = 0; i < nodeTree.sb.Length; i++)
+                //出队
+                var currentNode = queue.Dequeue();
+                //失败节点
+                for (int i = 0; i < currentNode.sb.Length; i++)
                 {
-                    if (nodeTree.Original[sb[i]] != null)
+
+                    if (currentNode.Original[currentNode.sb[i]] == null)
+                        continue;
+                    //如果当前是根节点，则根节点的失败指针指向root
+                    if (currentNode == root)
                     {
-                        queue.Enqueue(nodeTree.Original[sb[i]]);
-                        Tree failTo = nodeTree.fail;
-                        while (true)
-                        {
-                            //如果找到了根节点还是没有找到
-                            if (failTo == null)
-                            {
-                                nodeTree.Original[sb[i]].fail = root;
-                                break;
-                            }
-                            if (failTo.Original[sb[i]]!=null)
-                            {
-                                failTo.Original[sb[i]].fail = failTo.Original[sb[i]];
-                                break;
-                            }
-                            else
-                            {
-                                failTo = failTo.fail;
-                            }
-                        }
+                        currentNode.Original[currentNode.sb[i]].fail = root;
                     }
+                    else
+                    {
+                        //获取当前节点的失败指针
+                        Tree currentFailNode = currentNode.fail;
+                        while (currentFailNode != null)
+                        {
+                            if (currentNode.Original.TryGetValue(currentFailNode.sb[i], out Tree childOfFailNode))//如果当前节点的孩子与当前节点的失败节点的孩子相同
+                            {
+                                currentNode.Original[currentNode.sb[i]].fail = childOfFailNode;
+                                break;
+                            }
+                            currentFailNode = currentFailNode.fail;
+                        }
+                        //等于null的话，指向root节点
+                        if (currentFailNode == null)
+                            currentNode.Original[currentNode.sb[i]].fail = root;
+                    }
+                    queue.Enqueue(currentNode.Original[currentNode.sb[i]]);//当前节点的孩子节点入队BFS广度优先搜索
                 }
             }
         }
-
-        public bool FindKeyWord(string keyWord)
-        {
-            bool boolToReturn = false;
-
-
-
-            return boolToReturn;
-        }
-        /// <summary>
-        /// 根据指定的主串，检索是否存在模式串
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        //public HashSet<int> SearchAC(string s)
-        //{
-        //    HashSet<int> hash = new HashSet<int>();
-
-        //    SearchAC(ref trieNode, s, ref hash);
-
-        //    return hash;
-        //}
 
         /// <summary>
         /// 根据指定的主串，检索是否存在模式串
@@ -138,11 +123,11 @@ namespace MyFirstTree
         /// <param name="root"></param>
         /// <param name="s"></param>
         /// <returns></returns>
-        public void SearchAC(ref TrieNode root, string s, ref HashSet<int> hashSet)
+        public void SearchAC(ref AC.Trie.TrieNode root, string s, ref HashSet<int> hashSet)
         {
             int freq = 0;
 
-            TrieNode head = root;
+            AC.Trie.TrieNode head = root;
 
             foreach (var c in s)
             {
@@ -153,14 +138,11 @@ namespace MyFirstTree
                 //回溯的去找它的当前节点的子节点
                 while ((head.childNodes[index] == null) && (head != root))
                     head = head.faliNode;
-
                 //获取该叉树
                 head = head.childNodes[index];
-
                 //如果为空，直接给root,表示该字符已经走完毕了
                 if (head == null)
                     head = root;
-
                 var temp = head;
 
                 //在trie树中匹配到了字符，标记当前节点为已访问，并继续寻找该节点的失败节点。
@@ -172,9 +154,7 @@ namespace MyFirstTree
                     //将找到的id追加到集合中
                     foreach (var item in temp.hashSet)
                         hashSet.Add(item);
-
                     temp.freq = -1;
-
                     temp = temp.faliNode;
                 }
             }

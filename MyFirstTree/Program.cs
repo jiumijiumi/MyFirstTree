@@ -31,13 +31,32 @@ namespace MyFirstTree
                         sortedWordList.Add(currentWord);
                     }
                 }
-               // SortedMethods.QuickSort(ref sortedWordList, 0, sortedWordList.Count);
+                // SortedMethods.QuickSort(ref sortedWordList, 0, sortedWordList.Count);
                 foreach (var word in sortedWordList)
                 {
                     tree.PlantATree(word[0], word);
                 }
+                tree.BuildFailNodeBfs( ref tree);
                 Console.ReadKey();
             }
+
+
+            //AC.Trie trie = new AC.Trie();
+            //trie.AddTrieNode("say", 1);
+            //trie.AddTrieNode("she", 2);
+            //trie.AddTrieNode("shr", 3);
+            //trie.AddTrieNode("her", 4);
+            //trie.AddTrieNode("he", 5);
+            //trie.BuildFailNodeBFS();
+            //string s = "yasherhs";
+
+            //var hashSet = trie.SearchAC(s);
+
+            //Console.WriteLine("在主串{0}中存在模式串的编号为:{1}", s, string.Join(",", hashSet));
+
+            //Console.Read();
+
+
         }
     }
 }
