@@ -12,7 +12,7 @@ using SensitiveWordFilter;
 namespace MyFirstTree
 {
     class Program
-    {   
+    {
         //二分搜索树  KMP算法，Trie树，AC自动机，BFS广度优先搜索
         //目标：比XA的程序运行的快340ms，在2018年到来之前完工//以后的算法估计都可以在这上面动刀子了
         //2017/11/9新建//2017/11/21/Version 1.0//2017/11/23/Version 1.1//11/25/Version 1.2
@@ -36,25 +36,27 @@ namespace MyFirstTree
                 {
                     tree.PlantATree(word[0], word);
                 }
-                tree.BuildFailNodeBfs( ref tree);
-                Console.ReadKey();
+                tree.BuildFailNodeBfs(ref tree);
+                var sb = new StringBuilder();
+                var strLen = 1024 * 1000;
+                for (int i = 0; i < strLen; i++)
+                {
+                    sb.Append(i % 10);
+                }
+                Console.WriteLine("请输入要检测的词语");
+                var strToCheck = sb.ToString();
+                strToCheck += Console.ReadLine();
+                Tree.Timer.Run(() =>
+                {
+                    var checkResult = tree.SearchAC(ref tree, strToCheck);
+                    Console.WriteLine("查找结果:{0}", (checkResult) ? "发现敏感词" :"无敏感词" );
+                }, "Checker");
+                Console.WriteLine("执行完毕,按回车再次测试");
+                Console.ReadLine();
             }
 
 
-            //AC.Trie trie = new AC.Trie();
-            //trie.AddTrieNode("say", 1);
-            //trie.AddTrieNode("she", 2);
-            //trie.AddTrieNode("shr", 3);
-            //trie.AddTrieNode("her", 4);
-            //trie.AddTrieNode("he", 5);
-            //trie.BuildFailNodeBFS();
-            //string s = "yasherhs";
 
-            //var hashSet = trie.SearchAC(s);
-
-            //Console.WriteLine("在主串{0}中存在模式串的编号为:{1}", s, string.Join(",", hashSet));
-
-            //Console.Read();
 
 
         }

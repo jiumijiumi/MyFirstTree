@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography.X509Certificates;
@@ -40,15 +41,19 @@ namespace MyFirstTree
             else
             {
                 bool haveChild = false;
-                haveChild = Original.TryGetValue(key, out Tree newParent);//还需要判断父子树是否有孩子，如果没有，则return//eg免定金PCP，免定金PCPXXX
+                haveChild = Original.TryGetValue(key, out Tree childOfThisKey);//还需要判断父子树是否有孩子，
                 if (haveChild)
                 {
-                    if (!newParent.Original.Any()) return;
+                    if (!childOfThisKey.Original.Any()) return; //如果没有，则return//eg免定金PCP，免定金PCPXXX
                     word = word.Substring(1);
                     if (word.Length > 0)
                     {
                         key = word[0];
-                        newParent.PlantATree(key, word);
+                        childOfThisKey.PlantATree(key, word);//判断这个关键字是否有了孩子，如果有了的话就在后面接上
+                    }
+                    else
+                    {
+                        childOfThisKey.IsEnd = true;//免定金PCPXXX在前面，免定金PCP在后面，则把免定金PCP后面打一个结束标记
                     }
                     return;
                 }
@@ -77,7 +82,6 @@ namespace MyFirstTree
         public void BuildFailNodeBfs(ref Tree root)
         {
             Queue<Tree> queue = new Queue<Tree>();
-
             //根节点入队
             queue.Enqueue(root);
             while (queue.Count != 0)
@@ -101,7 +105,9 @@ namespace MyFirstTree
                         Tree currentFailNode = currentNode.fail;
                         while (currentFailNode != null)
                         {
-                            if (currentNode.Original.TryGetValue(currentFailNode.sb[i], out Tree childOfFailNode))//如果当前节点的孩子与当前节点的失败节点的孩子相同
+                            //bool currentNodeHaveChild = currentNode.Original.TryGetValue(sb[i], out Tree childOfCurrentNode);
+                            //bool currentFailNodeHaveCfhild = currentFailNode.Original.TryGetValue(sb[i], out Tree childOfCurrentFailNode);
+                            if (currentFailNode.Original.TryGetValue(sb[i],out Tree childOfFailNode))//如果当前节点的孩子与当前节点的失败节点的孩子相同
                             {
                                 currentNode.Original[currentNode.sb[i]].fail = childOfFailNode;
                                 break;
@@ -117,45 +123,57 @@ namespace MyFirstTree
             }
         }
 
-        /// <summary>
-        /// 根据指定的主串，检索是否存在模式串
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public void SearchAC(ref AC.Trie.TrieNode root, string s, ref HashSet<int> hashSet)
+        public bool SearchAC(ref Tree root, string sToCheck)
         {
-            int freq = 0;
-
-            AC.Trie.TrieNode head = root;
-
-            foreach (var c in s)
+            bool boolToReturn = false;
+            Tree currentNode = root;
+            int i = 0;
+            while (i<sToCheck.Length)
             {
-                //计算位置
-                int index = c - 'a';
-
-                //如果当前匹配的字符在trie树中无子节点并且不是root，则要走失败指针
-                //回溯的去找它的当前节点的子节点
-                while ((head.childNodes[index] == null) && (head != root))
-                    head = head.faliNode;
-                //获取该叉树
-                head = head.childNodes[index];
-                //如果为空，直接给root,表示该字符已经走完毕了
-                if (head == null)
-                    head = root;
-                var temp = head;
-
-                //在trie树中匹配到了字符，标记当前节点为已访问，并继续寻找该节点的失败节点。
-                //直到root结束，相当于走了一个回旋。(注意：最后我们会出现一个freq=-1的失败指针链)
-                while (temp != root && temp.freq != -1)
+                if (currentNode.Original.TryGetValue(sToCheck[i], out Tree currentKeyChild))
                 {
-                    freq += temp.freq;
+                    currentNode = currentKeyChild;
+                    if (currentNode.IsEnd)
+                    {
+                        boolToReturn = true;
+                        break;
+                    }
+                    i++;
+                }
+                else
+                {
+                    currentNode = currentNode.fail;
+                    if (currentNode == null)
+                    {
+                        currentNode = root;
+                        i++;
+                    }
+                }
+            }
+            return boolToReturn;
+        }
 
-                    //将找到的id追加到集合中
-                    foreach (var item in temp.hashSet)
-                        hashSet.Add(item);
-                    temp.freq = -1;
-                    temp = temp.faliNode;
+        public class Timer
+        {
+            private static readonly Random _ran = new Random();
+            public static void Run(Action act, string actName = "")
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                try
+                {
+                    act();
+                    Console.ForegroundColor = (ConsoleColor)_ran.Next(2, 16);
+                    Console.WriteLine("[{1}]运行用时:{0}ms", sw.ElapsedMilliseconds, string.IsNullOrEmpty(actName) ? act.Method.Name : actName);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("程序运行出错:");
+                    Console.WriteLine(e);
+                }
+                finally
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
             }
         }
